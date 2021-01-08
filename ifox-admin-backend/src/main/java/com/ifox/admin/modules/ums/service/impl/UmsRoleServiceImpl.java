@@ -1,7 +1,6 @@
 package com.ifox.admin.modules.ums.service.impl;
 
 import com.ifox.admin.modules.ums.model.*;
-import com.ifoxhub.admin.modules.ums.model.*;
 import com.ifox.admin.modules.ums.repository.UmsMenuRepository;
 import com.ifox.admin.modules.ums.repository.UmsResourceRepository;
 import com.ifox.admin.modules.ums.repository.UmsRoleRepository;

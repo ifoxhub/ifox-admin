@@ -5,7 +5,6 @@ import com.ifox.admin.domain.AdminUserDetails;
 import com.ifox.admin.modules.ums.dto.UmsAdminParam;
 import com.ifox.admin.modules.ums.dto.UpdateAdminPasswordParam;
 import com.ifox.admin.modules.ums.model.*;
-import com.ifoxhub.admin.modules.ums.model.*;
 import com.ifox.admin.modules.ums.repository.UmsAdminLoginLogRepository;
 import com.ifox.admin.modules.ums.repository.UmsAdminRepository;
 import com.ifox.admin.modules.ums.repository.UmsResourceRepository;

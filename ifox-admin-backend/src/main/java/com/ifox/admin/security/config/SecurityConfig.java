@@ -1,7 +1,6 @@
 package com.ifox.admin.security.config;
 
 import com.ifox.admin.security.component.*;
-import com.ifoxhub.admin.security.component.*;
 import com.ifox.admin.security.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
