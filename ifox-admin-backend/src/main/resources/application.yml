@@ -1,12 +1,10 @@
 server:
   port: 8080
-
 spring:
   application:
     name: ifox-admin
   profiles:
     active: dev
-
 springdoc:
   swagger-ui:
     docExpansion: list
@@ -35,6 +33,8 @@ redis:
 secure:
   ignored:
     urls: #安全路径白名单
+      - /
+      - /static/**
       - /swagger-ui.html
       - /swagger-ui/**
       - /v3/api-docs/**

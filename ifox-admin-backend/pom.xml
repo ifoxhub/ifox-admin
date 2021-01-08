@@ -119,6 +119,59 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--This is to package the frontend, if you don't need to configure frontend.plugin.skip=true locally.-->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <workingDirectory>../ifox-admin-web</workingDirectory>
+                    <nodeVersion>v10.15.2</nodeVersion>
+                    <skip>false</skip>
+                </configuration>
+                <executions>
+                    <!--If you have installed the nodejs environment locally, this step can also be annotated.-->
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <useDefaultDelimiters>true</useDefaultDelimiters>
+                    <resources>
+                        <resource>
+                            <targetPath>${basedir}/src/main/resources/public</targetPath>
+                            <directory>../ifox-admin-web/dist</directory>
+                        </resource>
+                        <resource>
+                            <targetPath>${basedir}/target/classes</targetPath>
+                            <directory>src/main/resources</directory>
+                        </resource>
+                        <resource>
+                            <targetPath>${basedir}/target/test-classes</targetPath>
+                            <directory>src/test/resources</directory>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

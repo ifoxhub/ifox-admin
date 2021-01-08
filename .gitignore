@@ -27,3 +27,5 @@ HELP.md
 
 ### VS Code ###
 .vscode/
+
+ifox-admin-backend/**/resources/public
