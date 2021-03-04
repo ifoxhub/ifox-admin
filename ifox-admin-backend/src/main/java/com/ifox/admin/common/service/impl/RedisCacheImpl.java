@@ -1,6 +1,6 @@
 package com.ifox.admin.common.service.impl;
 
-import com.ifox.admin.common.service.RedisService;
+import com.ifox.admin.common.service.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -12,9 +12,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author zhangxl
  * @version v1.0
- * @date 2021/1/7
+ * @date 2021/1/11 3:26 下午
  */
-public class RedisServiceImpl implements RedisService {
+public class RedisCacheImpl implements CacheService {
+
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -22,7 +23,10 @@ public class RedisServiceImpl implements RedisService {
     public void set(String key, Object value, long time) {
         redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
     }
-
+    @Override
+    public void set(String key, Object value, long time, TimeUnit unit) {
+        redisTemplate.opsForValue().set(key, value, time, unit);
+    }
     @Override
     public void set(String key, Object value) {
         redisTemplate.opsForValue().set(key, value);
@@ -34,12 +38,12 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public Boolean del(String key) {
+    public Boolean delete(String key) {
         return redisTemplate.delete(key);
     }
 
     @Override
-    public Long del(List<String> keys) {
+    public Long delete(List<String> keys) {
         return redisTemplate.delete(keys);
     }
 
@@ -195,4 +199,5 @@ public class RedisServiceImpl implements RedisService {
     public Long lRemove(String key, long count, Object value) {
         return redisTemplate.opsForList().remove(key, count, value);
     }
+
 }

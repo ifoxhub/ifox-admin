@@ -11,7 +11,6 @@ import com.ifox.admin.modules.ums.service.UmsAdminService;
 import com.ifox.admin.modules.ums.service.UmsRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -35,14 +34,21 @@ import java.util.stream.Collectors;
 @Tag(name = "UmsAdminController", description = "后台用户管理")
 @RequestMapping("/admin")
 public class UmsAdminController {
-    @Value("${jwt.tokenHeader}")
+
+    @Value("${security.jwt.tokenHeader}")
     private String tokenHeader;
-    @Value("${jwt.tokenHead}")
+    
+    @Value("${security.jwt.tokenHead}")
     private String tokenHead;
-    @Autowired
-    private UmsAdminService adminService;
-    @Autowired
-    private UmsRoleService roleService;
+
+    private final UmsAdminService adminService;
+
+    private final UmsRoleService roleService;
+
+    public UmsAdminController(UmsAdminService adminService, UmsRoleService roleService) {
+        this.adminService = adminService;
+        this.roleService = roleService;
+    }
 
     @Operation(summary = "用户注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)

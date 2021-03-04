@@ -3,12 +3,13 @@ package com.ifox.admin.security.util;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -25,25 +26,31 @@ import java.util.Map;
  * signature的生成算法：
  * HMACSHA512(base64UrlEncode(header) + "." +base64UrlEncode(payload),secret)
  */
+@Slf4j
 public class JwtTokenUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class);
+
+    private static final String CLAIM_KEY_USERID = "iss";
     private static final String CLAIM_KEY_USERNAME = "sub";
     private static final String CLAIM_KEY_CREATED = "created";
-    @Value("${jwt.secret}")
+
+    @Value("${security.jwt.secret}")
     private String secret;
-    @Value("${jwt.expiration}")
+    @Value("${security.jwt.expiration}")
     private Long expiration;
-    @Value("${jwt.tokenHead}")
+    @Value("${security.jwt.tokenHead}")
     private String tokenHead;
+    @Value("${security.jwt.tokenHeader}")
+    private String tokenHeader;
 
     /**
      * 根据负责生成JWT的token
      */
     private String generateToken(Map<String, Object> claims) {
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(key)
                 .compact();
     }
 
@@ -53,12 +60,13 @@ public class JwtTokenUtil {
     private Claims getClaimsFromToken(String token) {
         Claims claims = null;
         try {
-            claims = Jwts.parser()
+            claims = Jwts.parserBuilder()
                     .setSigningKey(secret)
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            LOGGER.info("JWT格式验证失败:{}", token);
+            log.info("JWT格式验证失败:{}", token);
         }
         return claims;
     }

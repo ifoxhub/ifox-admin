@@ -1,19 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : localhost
- Source Server Type    : MySQL
- Source Server Version : 50717
- Source Host           : localhost:3306
- Source Schema         : ifox_admin
-
- Target Server Type    : MySQL
- Target Server Version : 50717
- File Encoding         : 65001
-
- Date: 07/01/2021 16:49:35
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -23,17 +7,17 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `ums_admin`;
 CREATE TABLE `ums_admin` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
-    `username` varchar(64) DEFAULT NULL,
-    `password` varchar(64) DEFAULT NULL,
-    `icon` varchar(500) DEFAULT NULL COMMENT '头像',
-    `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
-    `nick_name` varchar(200) DEFAULT NULL COMMENT '昵称',
-    `note` varchar(500) DEFAULT NULL COMMENT '备注信息',
+    `username` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+    `password` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+    `icon` varchar(500) CHARACTER SET utf8 DEFAULT NULL COMMENT '头像',
+    `email` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT '邮箱',
+    `nick_name` varchar(200) CHARACTER SET utf8 DEFAULT NULL COMMENT '昵称',
+    `note` varchar(500) CHARACTER SET utf8 DEFAULT NULL COMMENT '备注信息',
     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
     `login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
     `status` int(1) DEFAULT '1' COMMENT '帐号启用状态：0->禁用；1->启用',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='后台用户表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='后台用户表';
 
 -- ----------------------------
 -- Records of ums_admin
@@ -50,17 +34,24 @@ CREATE TABLE `ums_admin_login_log` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `admin_id` bigint(20) DEFAULT NULL,
     `create_time` datetime DEFAULT NULL,
-    `ip` varchar(64) DEFAULT NULL,
-    `address` varchar(100) DEFAULT NULL,
-    `user_agent` varchar(100) DEFAULT NULL COMMENT '浏览器登录类型',
+    `ip` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+    `address` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+    `user_agent` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT '浏览器登录类型',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=288 DEFAULT CHARSET=utf8 COMMENT='后台用户登录日志表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8mb4 COMMENT='后台用户登录日志表';
 
 -- ----------------------------
 -- Records of ums_admin_login_log
 -- ----------------------------
 BEGIN;
 INSERT INTO `ums_admin_login_log` VALUES (287, 3, '2021-01-07 16:15:49', '0:0:0:0:0:0:0:1', NULL, NULL);
+INSERT INTO `ums_admin_login_log` VALUES (288, 3, '2021-01-07 16:51:32', '0:0:0:0:0:0:0:1', NULL, NULL);
+INSERT INTO `ums_admin_login_log` VALUES (289, 3, '2021-01-08 12:44:59', '0:0:0:0:0:0:0:1', NULL, NULL);
+INSERT INTO `ums_admin_login_log` VALUES (290, 3, '2021-01-08 12:45:37', '0:0:0:0:0:0:0:1', NULL, NULL);
+INSERT INTO `ums_admin_login_log` VALUES (291, 3, '2021-01-08 13:29:11', '0:0:0:0:0:0:0:1', NULL, NULL);
+INSERT INTO `ums_admin_login_log` VALUES (292, 3, '2021-01-08 13:33:43', '0:0:0:0:0:0:0:1', NULL, NULL);
+INSERT INTO `ums_admin_login_log` VALUES (293, 3, '2021-03-04 12:43:49', '127.0.0.1', NULL, NULL);
+INSERT INTO `ums_admin_login_log` VALUES (294, 3, '2021-03-04 12:45:17', '0:0:0:0:0:0:0:1', NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -72,7 +63,7 @@ CREATE TABLE `ums_admin_role_relation` (
     `admin_id` bigint(20) DEFAULT NULL,
     `role_id` bigint(20) DEFAULT NULL,
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COMMENT='后台用户和角色关系表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COMMENT='后台用户和角色关系表';
 
 -- ----------------------------
 -- Records of ums_admin_role_relation
@@ -89,14 +80,14 @@ CREATE TABLE `ums_menu` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `parent_id` bigint(20) DEFAULT NULL COMMENT '父级ID',
     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-    `title` varchar(100) DEFAULT NULL COMMENT '菜单名称',
+    `title` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT '菜单名称',
     `level` int(4) DEFAULT NULL COMMENT '菜单级数',
     `sort` int(4) DEFAULT NULL COMMENT '菜单排序',
-    `name` varchar(100) DEFAULT NULL COMMENT '前端名称',
-    `icon` varchar(200) DEFAULT NULL COMMENT '前端图标',
+    `name` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT '前端名称',
+    `icon` varchar(200) CHARACTER SET utf8 DEFAULT NULL COMMENT '前端图标',
     `hidden` int(1) DEFAULT NULL COMMENT '前端隐藏',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='后台菜单表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COMMENT='后台菜单表';
 
 -- ----------------------------
 -- Records of ums_menu
@@ -116,12 +107,12 @@ DROP TABLE IF EXISTS `ums_resource`;
 CREATE TABLE `ums_resource` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-    `name` varchar(200) DEFAULT NULL COMMENT '资源名称',
-    `url` varchar(200) DEFAULT NULL COMMENT '资源URL',
-    `description` varchar(500) DEFAULT NULL COMMENT '描述',
+    `name` varchar(200) CHARACTER SET utf8 DEFAULT NULL COMMENT '资源名称',
+    `url` varchar(200) CHARACTER SET utf8 DEFAULT NULL COMMENT '资源URL',
+    `description` varchar(500) CHARACTER SET utf8 DEFAULT NULL COMMENT '描述',
     `category_id` bigint(20) DEFAULT NULL COMMENT '资源分类ID',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='后台资源表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COMMENT='后台资源表';
 
 -- ----------------------------
 -- Records of ums_resource
@@ -141,10 +132,10 @@ DROP TABLE IF EXISTS `ums_resource_category`;
 CREATE TABLE `ums_resource_category` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-    `name` varchar(200) DEFAULT NULL COMMENT '分类名称',
+    `name` varchar(200) CHARACTER SET utf8 DEFAULT NULL COMMENT '分类名称',
     `sort` int(4) DEFAULT NULL COMMENT '排序',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='资源分类表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='资源分类表';
 
 -- ----------------------------
 -- Records of ums_resource_category
@@ -159,14 +150,14 @@ COMMIT;
 DROP TABLE IF EXISTS `ums_role`;
 CREATE TABLE `ums_role` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
-    `name` varchar(100) DEFAULT NULL COMMENT '名称',
-    `description` varchar(500) DEFAULT NULL COMMENT '描述',
+    `name` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT '名称',
+    `description` varchar(500) CHARACTER SET utf8 DEFAULT NULL COMMENT '描述',
     `admin_count` int(11) DEFAULT NULL COMMENT '后台用户数量',
     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
     `status` int(1) DEFAULT '1' COMMENT '启用状态：0->禁用；1->启用',
     `sort` int(11) DEFAULT '0',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='后台用户角色表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='后台用户角色表';
 
 -- ----------------------------
 -- Records of ums_role
@@ -184,7 +175,7 @@ CREATE TABLE `ums_role_menu_relation` (
     `role_id` bigint(20) DEFAULT NULL COMMENT '角色ID',
     `menu_id` bigint(20) DEFAULT NULL COMMENT '菜单ID',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8 COMMENT='后台角色菜单关系表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COMMENT='后台角色菜单关系表';
 
 -- ----------------------------
 -- Records of ums_role_menu_relation
@@ -206,7 +197,7 @@ CREATE TABLE `ums_role_resource_relation` (
     `role_id` bigint(20) DEFAULT NULL COMMENT '角色ID',
     `resource_id` bigint(20) DEFAULT NULL COMMENT '资源ID',
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=216 DEFAULT CHARSET=utf8 COMMENT='后台角色资源关系表';
+    ) ENGINE=InnoDB AUTO_INCREMENT=170 DEFAULT CHARSET=utf8mb4 COMMENT='后台角色资源关系表';
 
 -- ----------------------------
 -- Records of ums_role_resource_relation

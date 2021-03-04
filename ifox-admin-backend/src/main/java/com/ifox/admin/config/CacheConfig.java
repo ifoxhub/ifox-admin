@@ -1,12 +1,15 @@
-package com.ifox.admin.common.config;
+package com.ifox.admin.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import com.ifox.admin.common.service.RedisService;
-import com.ifox.admin.common.service.impl.RedisServiceImpl;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ifox.admin.common.service.CacheService;
+import com.ifox.admin.common.service.impl.RedisCacheImpl;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -22,9 +25,10 @@ import java.time.Duration;
 /**
  * @author zhangxl
  * @version v1.0
- * @date 2021/1/7
+ * @date 2021/1/11 3:27 下午
  */
-public class BaseRedisConfig {
+@Configuration
+public class CacheConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
@@ -45,6 +49,9 @@ public class BaseRedisConfig {
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        // 解决jackson2无法反序列化LocalDateTime的问题
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
         //必须设置，否则无法将JSON转化为对象，会转化成Map类型
         objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,ObjectMapper.DefaultTyping.NON_FINAL);
         serializer.setObjectMapper(objectMapper);
@@ -62,8 +69,9 @@ public class BaseRedisConfig {
 
 
     @Bean
-    public RedisService redisService(){
-        return new RedisServiceImpl();
+    public CacheService cacheService(){
+        return new RedisCacheImpl();
     }
+
 
 }

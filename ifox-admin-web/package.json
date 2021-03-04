@@ -1,8 +1,8 @@
 {
-  "name": "mall-admin-web",
+  "name": "ifox-admin-web",
   "version": "1.0.0",
-  "description": "mall后台管理前端",
-  "author": "macro",
+  "description": "ifox后台管理前端",
+  "author": "ifox",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

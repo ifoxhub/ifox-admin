@@ -3,18 +3,21 @@ package com.ifox.admin.common.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zhangxl
  * @version v1.0
- * @date 2021/1/7
+ * @date 2021/1/11 3:25 下午
  */
-public interface RedisService {
+public interface CacheService {
 
     /**
      * 保存属性
      */
     void set(String key, Object value, long time);
+
+    void set(String key, Object value, long time, TimeUnit unit);
 
     /**
      * 保存属性
@@ -29,12 +32,12 @@ public interface RedisService {
     /**
      * 删除属性
      */
-    Boolean del(String key);
+    Boolean delete(String key);
 
     /**
      * 批量删除属性
      */
-    Long del(List<String> keys);
+    Long delete(List<String> keys);
 
     /**
      * 设置过期时间
@@ -180,4 +183,5 @@ public interface RedisService {
      * 从List结构中移除属性
      */
     Long lRemove(String key, long count, Object value);
+
 }

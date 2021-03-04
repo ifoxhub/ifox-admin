@@ -1,14 +1,12 @@
 package com.ifox.admin.modules.ums.service.impl;
 
-import com.ifox.admin.common.service.RedisService;
+import com.ifox.admin.common.service.CacheService;
 import com.ifox.admin.modules.ums.model.UmsAdmin;
 import com.ifox.admin.modules.ums.model.UmsAdminRoleRelation;
 import com.ifox.admin.modules.ums.model.UmsResource;
 import com.ifox.admin.modules.ums.repository.UmsAdminRepository;
 import com.ifox.admin.modules.ums.repository.UmsAdminRoleRelationRepository;
 import com.ifox.admin.modules.ums.service.UmsAdminCacheService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,8 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
 
-    @Autowired
-    private RedisService redisService;
+    private final CacheService cacheService;
 
     @Resource
     private UmsAdminRepository adminRepository;
@@ -33,37 +30,37 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
     @Resource
     private UmsAdminRoleRelationRepository adminRoleRelationRepository;
 
-    @Value("${redis.database}")
-    private String REDIS_DATABASE;
-    @Value("${redis.expire.common}")
-    private Long REDIS_EXPIRE;
-    @Value("${redis.key.admin}")
-    private String REDIS_KEY_ADMIN;
-    @Value("${redis.key.resourceList}")
-    private String REDIS_KEY_RESOURCE_LIST;
+    private static final String CACHE_DATABASE = "ifox";
+    private static final Long CACHE_EXPIRE = 86400L;
+    private static final String CACHE_KEY_ADMIN = "ums:admin";
+    private static final String CACHE_KEY_RESOURCE_LIST = "ums:resources";
+
+    public UmsAdminCacheServiceImpl(CacheService cacheService) {
+        this.cacheService = cacheService;
+    }
 
     @Override
     public void delAdmin(Long adminId) {
         UmsAdmin admin = adminRepository.findById(adminId).orElse(null);
         if (admin != null) {
-            String key = REDIS_DATABASE + ":" + REDIS_KEY_ADMIN + ":" + admin.getUsername();
-            redisService.del(key);
+            String key = CACHE_DATABASE + ":" + CACHE_KEY_ADMIN + ":" + admin.getUsername();
+            cacheService.delete(key);
         }
     }
 
     @Override
     public void delResourceList(Long adminId) {
-        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
-        redisService.del(key);
+        String key = CACHE_DATABASE + ":" + CACHE_KEY_RESOURCE_LIST + ":" + adminId;
+        cacheService.delete(key);
     }
 
     @Override
     public void delResourceListByRole(Long roleId) {
         List<UmsAdminRoleRelation> relationList = adminRoleRelationRepository.findAllByRoleId(roleId);
         if (!CollectionUtils.isEmpty(relationList)) {
-            String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
+            String keyPrefix = CACHE_DATABASE + ":" + CACHE_KEY_RESOURCE_LIST + ":";
             List<String> keys = relationList.stream().map(relation -> keyPrefix + relation.getAdminId()).collect(Collectors.toList());
-            redisService.del(keys);
+            cacheService.delete(keys);
         }
     }
 
@@ -71,9 +68,9 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
     public void delResourceListByRoleIds(List<Long> roleIds) {
         List<UmsAdminRoleRelation> relationList = adminRoleRelationRepository.findAllByRoleIdIn(roleIds);
         if (!CollectionUtils.isEmpty(relationList)) {
-            String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
+            String keyPrefix = CACHE_DATABASE + ":" + CACHE_KEY_RESOURCE_LIST + ":";
             List<String> keys = relationList.stream().map(relation -> keyPrefix + relation.getAdminId()).collect(Collectors.toList());
-            redisService.del(keys);
+            cacheService.delete(keys);
         }
     }
 
@@ -81,33 +78,33 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
     public void delResourceListByResource(Long resourceId) {
         List<Long> adminIdList = adminRepository.getAdminIdList(resourceId);
         if (!CollectionUtils.isEmpty(adminIdList)) {
-            String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
+            String keyPrefix = CACHE_DATABASE + ":" + CACHE_KEY_RESOURCE_LIST + ":";
             List<String> keys = adminIdList.stream().map(adminId -> keyPrefix + adminId).collect(Collectors.toList());
-            redisService.del(keys);
+            cacheService.delete(keys);
         }
     }
 
     @Override
     public UmsAdmin getAdmin(String username) {
-        String key = REDIS_DATABASE + ":" + REDIS_KEY_ADMIN + ":" + username;
-        return (UmsAdmin) redisService.get(key);
+        String key = CACHE_DATABASE + ":" + CACHE_KEY_ADMIN + ":" + username;
+        return (UmsAdmin) cacheService.get(key);
     }
 
     @Override
     public void setAdmin(UmsAdmin admin) {
-        String key = REDIS_DATABASE + ":" + REDIS_KEY_ADMIN + ":" + admin.getUsername();
-        redisService.set(key, admin, REDIS_EXPIRE);
+        String key = CACHE_DATABASE + ":" + CACHE_KEY_ADMIN + ":" + admin.getUsername();
+        cacheService.set(key, admin, CACHE_EXPIRE);
     }
 
     @Override
     public List<UmsResource> getResourceList(Long adminId) {
-        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
-        return (List<UmsResource>) redisService.get(key);
+        String key = CACHE_DATABASE + ":" + CACHE_KEY_RESOURCE_LIST + ":" + adminId;
+        return (List<UmsResource>) cacheService.get(key);
     }
 
     @Override
     public void setResourceList(Long adminId, List<UmsResource> resourceList) {
-        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
-        redisService.set(key, resourceList, REDIS_EXPIRE);
+        String key = CACHE_DATABASE + ":" + CACHE_KEY_RESOURCE_LIST + ":" + adminId;
+        cacheService.set(key, resourceList, CACHE_EXPIRE);
     }
 }
