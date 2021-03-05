@@ -78,7 +78,7 @@ public class UmsAdminController {
     @Operation(summary = "刷新token")
     @RequestMapping(value = "/refreshToken", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult refreshToken(HttpServletRequest request) {
+    public CommonResult refreshToken(HttpServletRequest request) throws Exception {
         String token = request.getHeader(tokenHeader);
         String refreshToken = adminService.refreshToken(token);
         if (refreshToken == null) {

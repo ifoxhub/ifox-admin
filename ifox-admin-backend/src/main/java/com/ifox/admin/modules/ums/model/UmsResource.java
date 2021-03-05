@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -32,9 +33,11 @@ public class UmsResource implements Serializable {
     private Date createTime;
 
     @Schema(description = "资源名称")
+    @NotBlank
     private String name;
 
     @Schema(description = "资源URL")
+    @NotBlank
     private String url;
 
     @Schema(description = "描述")

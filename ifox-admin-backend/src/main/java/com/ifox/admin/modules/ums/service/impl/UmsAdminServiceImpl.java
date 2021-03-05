@@ -12,10 +12,9 @@ import com.ifox.admin.modules.ums.repository.UmsRoleRepository;
 import com.ifox.admin.modules.ums.service.UmsAdminCacheService;
 import com.ifox.admin.modules.ums.service.UmsAdminRoleRelationService;
 import com.ifox.admin.modules.ums.service.UmsAdminService;
-import com.ifox.admin.security.util.JwtTokenUtil;
+import com.ifox.admin.security.util.JoseJwtTokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,10 +43,11 @@ import java.util.List;
  * @date 2021/1/6
  */
 @Service
+@Slf4j
 public class UmsAdminServiceImpl implements UmsAdminService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminServiceImpl.class);
+
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JoseJwtTokenUtil jwtTokenUtil;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -114,11 +114,13 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            token = jwtTokenUtil.generateToken(userDetails);
-//            updateLoginTimeByUsername(username);
+            token = jwtTokenUtil.generateJwtToken(userDetails);
+            updateLoginTimeByUsername(username);
             insertLoginLog(username);
         } catch (AuthenticationException e) {
-            LOGGER.warn("登录异常:{}", e.getMessage());
+            log.warn("登录异常:{}", e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return token;
     }
@@ -151,8 +153,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     }
 
     @Override
-    public String refreshToken(String oldToken) {
-        return jwtTokenUtil.refreshHeadToken(oldToken);
+    public String refreshToken(String oldToken) throws Exception {
+        return jwtTokenUtil.refreshToken(oldToken);
     }
 
     @Override

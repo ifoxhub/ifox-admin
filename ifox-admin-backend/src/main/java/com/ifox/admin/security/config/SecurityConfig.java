@@ -1,7 +1,7 @@
 package com.ifox.admin.security.config;
 
 import com.ifox.admin.security.component.*;
-import com.ifox.admin.security.util.JwtTokenUtil;
+import com.ifox.admin.security.util.JoseJwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
@@ -102,8 +102,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtTokenUtil jwtTokenUtil() {
-        return new JwtTokenUtil();
+    public JoseJwtTokenUtil jwtTokenUtil() {
+        return new JoseJwtTokenUtil();
     }
 
     @ConditionalOnBean(name = "dynamicSecurityService")

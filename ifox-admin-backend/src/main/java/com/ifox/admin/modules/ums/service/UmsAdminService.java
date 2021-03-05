@@ -39,7 +39,7 @@ public interface UmsAdminService {
      * 刷新token的功能
      * @param oldToken 旧的token
      */
-    String refreshToken(String oldToken);
+    String refreshToken(String oldToken) throws Exception;
 
     /**
      * 根据用户名或昵称分页查询用户

@@ -25,4 +25,6 @@ public class JwtConfig {
 
     private String tokenHead = "Bearer ";
 
+    private String issuer = "ifox";
+
 }

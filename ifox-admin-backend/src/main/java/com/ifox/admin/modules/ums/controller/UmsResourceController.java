@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class UmsResourceController {
     @Operation(summary = "添加后台资源")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult create(@RequestBody UmsResource umsResource) {
+    public CommonResult create(@RequestBody @Valid UmsResource umsResource) {
         boolean success = resourceService.create(umsResource);
         dynamicSecurityMetadataSource.clearDataSource();
         if (success) {
@@ -46,7 +47,7 @@ public class UmsResourceController {
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult update(@PathVariable Long id,
-                               @RequestBody UmsResource umsResource) {
+                               @RequestBody @Valid UmsResource umsResource) {
         boolean success = resourceService.update(id, umsResource);
         dynamicSecurityMetadataSource.clearDataSource();
         if (success) {

@@ -25,6 +25,7 @@ security:
     tokenHeader: Authorization #JWT存储的请求头
     expiration: 604800 #JWT的超期限时间(60*60*24*7)
     tokenHead: 'Bearer '  #JWT负载中拿到开头
+    issuer: ${spring.application.name:ifox}
   ignored:
     urls: #安全路径白名单
       - /
