@@ -17,6 +17,7 @@
 
     <properties>
         <skipTests>true</skipTests>
+        <frontend.plugin.skip>true</frontend.plugin.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -67,6 +68,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
 
         <!--SpringSecurity依赖配置-->
@@ -138,7 +144,7 @@
                 <configuration>
                     <workingDirectory>../ifox-admin-web</workingDirectory>
                     <nodeVersion>v10.15.2</nodeVersion>
-                    <skip>false</skip>
+                    <skip>${frontend.plugin.skip}</skip>
                 </configuration>
                 <executions>
                     <!--If you have installed the nodejs environment locally, this step can also be annotated.-->

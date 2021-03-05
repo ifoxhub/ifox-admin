@@ -6,8 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.ifox.admin.common.service.CacheService;
+import com.ifox.admin.common.service.impl.CaffeineCacheImpl;
 import com.ifox.admin.common.service.impl.RedisCacheImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -21,6 +27,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zhangxl
@@ -28,9 +35,11 @@ import java.time.Duration;
  * @date 2021/1/11 3:27 下午
  */
 @Configuration
+@EnableConfigurationProperties(value = {CacheProperties.class})
 public class CacheConfig {
 
     @Bean
+    @ConditionalOnProperty(name = "ifox.cache.server", havingValue = "redis", matchIfMissing = true)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisSerializer<Object> serializer = redisSerializer();
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -44,6 +53,7 @@ public class CacheConfig {
     }
 
     @Bean
+    @ConditionalOnBean(RedisTemplate.class)
     public RedisSerializer<Object> redisSerializer() {
         //创建JSON序列化器
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
@@ -59,6 +69,7 @@ public class CacheConfig {
     }
 
     @Bean
+    @ConditionalOnBean(RedisTemplate.class)
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
         //设置Redis缓存有效期为1天
@@ -69,8 +80,24 @@ public class CacheConfig {
 
 
     @Bean
-    public CacheService cacheService(){
+    @ConditionalOnBean(RedisTemplate.class)
+    public CacheService redisCacheService(){
         return new RedisCacheImpl();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "ifox.cache.server", havingValue = "caffeine")
+    public Cache<String, Object> caffeineCache() {
+        return Caffeine
+                .newBuilder()
+                .expireAfterWrite(60, TimeUnit.MINUTES)
+                .build();
+    }
+
+    @Bean
+    @ConditionalOnBean(Cache.class)
+    public CacheService caffeineCacheService(){
+        return new CaffeineCacheImpl();
     }
 
 
